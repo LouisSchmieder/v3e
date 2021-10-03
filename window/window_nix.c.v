@@ -7,14 +7,18 @@ import math
 
 [typedef]
 struct C.Display {}
+
 [typedef]
 struct C.Window {}
+
 [typedef]
 struct C.XEvent {
 	@type int
 }
+
 [typedef]
 struct C.GC {}
+
 [typedef]
 struct C.XPoint {
 	x u16
@@ -44,14 +48,14 @@ struct Display {
 
 pub struct Window {
 mut:
-	d &Display = 0
-	w C.Window
+	d      &Display = 0
+	w      C.Window
 	screen int
 pub mut:
-	width int
-	height int
+	width   int
+	height  int
 	running bool
-	buffer &WindowPixelBuffer = &WindowPixelBuffer{}
+	buffer  &WindowPixelBuffer = &WindowPixelBuffer{}
 }
 
 pub fn create_window(cfg WindowConfig) ?&Window {
@@ -63,7 +67,9 @@ pub fn create_window(cfg WindowConfig) ?&Window {
 	}
 	win.height = cfg.height
 	win.width = cfg.width
-	win.w = C.XCreateSimpleWindow(win.d.d, C.XRootWindow(win.d.d, win.screen), cfg.x, cfg.y, cfg.width, cfg.height, cfg.depth, C.BlackPixel(win.d.d, win.screen), C.WhitePixel(win.d.d, win.screen))
+	win.w = C.XCreateSimpleWindow(win.d.d, C.XRootWindow(win.d.d, win.screen), cfg.x,
+		cfg.y, cfg.width, cfg.height, cfg.depth, C.BlackPixel(win.d.d, win.screen), C.WhitePixel(win.d.d,
+		win.screen))
 	win.buffer.pixels = []u32{len: win.height * win.width}
 	C.XSelectInput(win.d.d, win.w, C.ExposureMask | C.KeyPressMask)
 	C.XMapWindow(win.d.d, win.w)
@@ -87,7 +93,8 @@ pub fn (mut window Window) run() {
 		if points.len == 0 {
 			continue
 		}
-		C.XDrawPoints(window.d.d, window.w, C.DefaultGC(window.d.d, window.screen), points.data, points.len, C.CoordModeOrigin)
+		C.XDrawPoints(window.d.d, window.w, C.DefaultGC(window.d.d, window.screen), points.data,
+			points.len, C.CoordModeOrigin)
 	}
 	C.XCloseDisplay(window.d.d)
 }
@@ -95,7 +102,7 @@ pub fn (mut window Window) run() {
 pub fn (mut window Window) input() {
 	mut event := &C.XEvent{}
 	for true {
-		C.XNextEvent(window.d.d, event)		
+		C.XNextEvent(window.d.d, event)
 		if event.@type == C.KeyPress {
 			break
 		}
