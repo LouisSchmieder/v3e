@@ -1,0 +1,10 @@
+# Binaries for programs and plugins
+main
+v3e
+*.exe
+*.exe~
+*.so
+*.dylib
+*.dll
+*.c
+.vscode
