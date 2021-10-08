@@ -2,6 +2,7 @@ module main
 
 import window
 import time
+import shader
 
 fn main() {
 	println('Hello World!')
